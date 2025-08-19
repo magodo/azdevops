@@ -1,4 +1,4 @@
-package client
+package azdevops
 
 import (
 	"encoding/json"
@@ -8,7 +8,7 @@ import (
 	"reflect"
 )
 
-func UnmarshalBody(response *http.Response, v interface{}, unmarshalFunc func([]byte, any) error) (err error) {
+func UnmarshalBody(response *http.Response, v any, unmarshalFunc func([]byte, any) error) (err error) {
 	if response != nil && response.Body != nil {
 		var err error
 		defer func() {
@@ -20,14 +20,14 @@ func UnmarshalBody(response *http.Response, v interface{}, unmarshalFunc func([]
 		if err != nil {
 			return err
 		}
-		return unmarshalFunc(body, &v)
+		return unmarshalFunc(body, v)
 	}
 	return nil
 }
 
-func UnmarshalCollection(jsonValue []byte, v interface{}) (err error) {
+func UnmarshalCollection(jsonValue []byte, v any) (err error) {
 	t := reflect.TypeOf(v)
-	if t.Kind() == reflect.Ptr {
+	if t.Kind() == reflect.Pointer {
 		t = t.Elem()
 	} else {
 		return errors.New("value type must be a pointer")
@@ -37,11 +37,9 @@ func UnmarshalCollection(jsonValue []byte, v interface{}) (err error) {
 		{Name: "Value", Type: t},
 	})
 	sv := reflect.New(sType)
-	err = json.Unmarshal(jsonValue, sv.Interface())
-	if err != nil {
+	if err = json.Unmarshal(jsonValue, sv.Interface()); err != nil {
 		return err
 	}
-
 	rv := reflect.ValueOf(v)
 	rv.Elem().Set(sv.Elem().FieldByName("Value"))
 	return nil

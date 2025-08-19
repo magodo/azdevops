@@ -1,4 +1,4 @@
-package client
+package azdevops
 
 import (
 	"context"
@@ -7,12 +7,14 @@ import (
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/tracing"
+	"github.com/google/uuid"
 )
 
 type Client struct {
-	ep string
-	pl runtime.Pipeline
-	tr tracing.Tracer
+	ep   string
+	pl   runtime.Pipeline
+	tr   tracing.Tracer
+	apis map[uuid.UUID]Api
 }
 
 func (c *Client) Do(ctx context.Context, method string, path string, body []byte, additionalHeaders map[string]string, additionalQueries map[string]string) (*http.Response, error) {

@@ -1,6 +1,12 @@
-package model
+package azdevops
 
 import "github.com/google/uuid"
+
+type ResourceArea struct {
+	Id          *uuid.UUID `json:"id,omitempty"`
+	LocationUrl *string    `json:"locationUrl,omitempty"`
+	Name        *string    `json:"name,omitempty"`
+}
 
 type Api struct {
 	// Area name for this resource
@@ -19,11 +25,4 @@ type Api struct {
 	ResourceVersion *int `json:"resourceVersion,omitempty"`
 	// This location's route template (templated relative path)
 	RouteTemplate *string `json:"routeTemplate,omitempty"`
-}
-
-// ResourceAreaInfo
-type ResourceArea struct {
-	Id          *uuid.UUID `json:"id,omitempty"`
-	LocationUrl *string    `json:"locationUrl,omitempty"`
-	Name        *string    `json:"name,omitempty"`
 }
