@@ -17,7 +17,7 @@ type Client struct {
 	apis map[uuid.UUID]Api
 }
 
-func (c *Client) Do(ctx context.Context, method string, path string, body []byte, additionalHeaders map[string]string, additionalQueries map[string]string) (*http.Response, error) {
+func (c *Client) Do(ctx context.Context, method string, path string, body any, additionalHeaders map[string]string, additionalQueries map[string]string) (*http.Response, error) {
 	endpoint := strings.TrimRight(c.ep, "/") + "/" + strings.TrimLeft(path, "/")
 	req, err := runtime.NewRequest(ctx, method, endpoint)
 	if err != nil {

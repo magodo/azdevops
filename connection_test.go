@@ -7,6 +7,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/google/uuid"
 	"github.com/magodo/azdevops"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewConnection_Anonymous(t *testing.T) {
@@ -26,21 +27,17 @@ func TestConnection_NewClient(t *testing.T) {
 		t.Skip(`"AZDEVOPS_ADO_ENDPOINT" not specified`)
 	}
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
-	if err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, err)
 	conn, err := azdevops.NewConnection(t.Context(), ep, &azdevops.Credential{AADTokenCredential: cred}, nil)
-	if err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, err)
 
 	// New default client
 	if _, err := conn.NewDefaultClient(t.Context()); err != nil {
-		t.Fatal(err)
+		require.NoError(t, err)
 	}
 
 	// New a release are client
 	if _, err := conn.NewAreaClient(t.Context(), uuid.MustParse("efc2f575-36ef-48e9-b672-0c6fb4a48ac5")); err != nil {
-		t.Fatal(err)
+		require.NoError(t, err)
 	}
 }

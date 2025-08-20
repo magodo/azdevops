@@ -50,11 +50,7 @@ func NewConnection(ctx context.Context, endpoint string, cred *Credential, optio
 	}
 
 	{
-		// Construct a temporary annonymous client to get the resource areas of this ADO instance
-		pl, err := NewPipeline(options.ModuleName, options.ModuleVersion, nil, &options.PipelineOptions, &options.ClientOptions)
-		if err != nil {
-			return nil, err
-		}
+		// Construct a temporary client to get the resource areas of this ADO instance
 		c := &Client{ep: endpoint, pl: pl, tr: tr}
 		resp, err := c.Do(ctx, http.MethodGet, "_apis/ResourceAreas", nil, nil, nil)
 		if err != nil {
